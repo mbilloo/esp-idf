@@ -21,6 +21,7 @@
 static const char TAG[] = "chip_generic";
 
 #define SPI_FLASH_DEFAULT_IDLE_TIMEOUT_MS           200
+//#define SPI_FLASH_GENERIC_CHIP_ERASE_TIMEOUT_MS   200000
 #define SPI_FLASH_GENERIC_CHIP_ERASE_TIMEOUT_MS     4000
 #define SPI_FLASH_GENERIC_SECTOR_ERASE_TIMEOUT_MS   500  //according to GD25Q127 + 100ms
 #define SPI_FLASH_GENERIC_BLOCK_ERASE_TIMEOUT_MS    1300  //according to GD25Q127 + 100ms
@@ -65,13 +66,11 @@ esp_err_t spi_flash_chip_generic_detect_size(esp_flash_t *chip, uint32_t *size)
 {
     uint32_t id = chip->chip_id;
     *size = 0;
-
     /* Can't detect size unless the high byte of the product ID matches the same convention, which is usually 0x40 or
      * 0xC0 or similar. */
     if ((id & 0x0F00) != 0) {
         return ESP_ERR_FLASH_UNSUPPORTED_CHIP;
     }
-
     *size = 1 << (id & 0xFF);
     return ESP_OK;
 }
@@ -201,6 +200,7 @@ esp_err_t spi_flash_chip_generic_write(esp_flash_t *chip, const void *buffer, ui
     if (err == ESP_OK && chip->host->flush_cache) {
         err = chip->host->flush_cache(chip->host, address, length);
     }
+
     return err;
 }
 
