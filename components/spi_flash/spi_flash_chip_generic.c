@@ -67,10 +67,10 @@ esp_err_t spi_flash_chip_generic_detect_size(esp_flash_t *chip, uint32_t *size)
     uint32_t id = chip->chip_id;
     *size = 0;
     /* Can't detect size unless the high byte of the product ID matches the same convention, which is usually 0x40 or
-     * 0xC0 or similar. */
+     * 0xC0 or similar.
     if ((id & 0x0F00) != 0) {
         return ESP_ERR_FLASH_UNSUPPORTED_CHIP;
-    }
+    }*/
     *size = 1 << (id & 0xFF);
     return ESP_OK;
 }
